@@ -1,5 +1,14 @@
-<meta name="claude:viewport-fit-sides" content="cover">
-<title>Spazzu Foam</title>
+<!doctype html>
+<html lang="en">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#0A0704">
+<title>Spazzu Foam - Instant Shoe Cleaning Foam by KAYROA</title>
+<meta name="description" content="Spazzu is a 400 ml instant shoe cleaning foam. Spray it on, work it in, wipe it off - no bucket, no soak, no washing machine.">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Spazzu - Keep them box fresh">
+<meta property="og:description" content="400 ml instant shoe cleaning foam. Tough on dirt, safe on shoes.">
+<meta property="og:image" content="podium.jpg">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Hanken+Grotesk:wght@400;500;700&family=Michroma&display=swap">
@@ -114,7 +123,7 @@ nav .btn{min-height:44px;padding:0 20px;font-size:14px}
 .stepname{font-family:var(--display);font-size:clamp(42px,6vw,84px);line-height:.9;
   color:var(--flash);margin:26px 0 4px;text-transform:uppercase}
 .stepsub{color:var(--mud);font-size:15px;min-height:22px}
-.rail{margin-top:34px;touch-action:none;cursor:grab;padding:18px 0 4px;user-select:none}
+.rail{margin-top:34px;touch-action:pan-y;cursor:grab;padding:18px 0 4px;user-select:none}
 .rail:active{cursor:grabbing}
 .rail .bar{position:relative;height:10px;border-radius:99px;
   background:rgba(247,243,234,.1);box-shadow:inset 0 0 0 1px var(--line)}
@@ -134,9 +143,10 @@ nav .btn{min-height:44px;padding:0 20px;font-size:14px}
 .stops li.on{color:var(--flash)}
 .shot{position:relative;border-radius:22px;overflow:hidden;background:#0E0A06;
   box-shadow:0 40px 90px -50px #000,inset 0 0 0 1px var(--line);
-  touch-action:none;cursor:grab;user-select:none}
+  touch-action:pan-y;cursor:grab;user-select:none}
 .shot:active{cursor:grabbing}
 .shot video,.shot img{width:100%;height:auto;display:block}
+.shot.scrubbing{touch-action:none}
 .shot .edge{position:absolute;top:14px;font-family:var(--tech);font-size:9.5px;
   letter-spacing:.2em;background:rgba(10,7,4,.7);backdrop-filter:blur(6px);
   padding:7px 12px;border-radius:999px;border:1px solid var(--line)}
@@ -248,16 +258,29 @@ footer b{display:block;font-family:var(--tech);font-size:15px;letter-spacing:.14
 @media (max-width:980px){
   nav ul{display:none}
   nav .btn{padding:0 15px;font-size:13px}
-  .hero .wrap{grid-template-columns:1fr;padding-block:20px 70px}
+  .hero .wrap{grid-template-columns:1fr;padding-block:8px 54px;gap:0}
   .hero .copy{order:2}
-  .slot,.spec .slot{height:clamp(240px,40vh,360px);margin-bottom:44px}
+  .slot,.spec .slot{height:clamp(196px,29vh,276px);margin-bottom:38px}
   .clean .wrap,.spec .wrap,.story .wrap,.notify .wrap,.faq-grid{grid-template-columns:1fr}
   .story figure{order:2}
   .steps{grid-template-columns:1fr}
   .gal{grid-template-columns:repeat(2,minmax(0,1fr))}
   .gal figure:first-child{grid-column:span 2;grid-row:auto}
   .mbar{display:flex}
-  body{padding-bottom:0}
+  /* keep the sticky bar from sitting on top of the last line of any section */
+  body{padding-bottom:calc(78px + env(safe-area-inset-bottom,0px))}
+  .hero .cta-row .btn{flex:1 1 100%;justify-content:center;text-align:center}
+  .eyebrow{letter-spacing:.16em}
+
+  /* intro, then the clip, then the handle - so you can see what you are dragging */
+  .clean .wrap{gap:22px}
+  .cleanside{display:contents}
+  .cleanintro{order:1}
+  .clean .shot{order:2;width:min(100%,calc(40vh * 0.5625));margin-inline:auto}
+  .cleanctrl{order:3}
+  .stepname{font-size:clamp(32px,9vw,48px);margin:0 0 3px}
+  .rail{margin-top:14px;padding-bottom:0}
+  .stops{margin-top:12px}
 }
 @media (max-width:520px){
   .gal{grid-template-columns:1fr}
@@ -314,20 +337,24 @@ footer b{display:block;font-family:var(--tech);font-size:15px;letter-spacing:.14
 
 <section class="clean band" id="clean">
   <div class="wrap">
-    <div>
-      <p class="eyebrow">Proof, not promises</p>
-      <h2 class="h-sec">Drag to clean</h2>
-      <p class="lede" style="margin-top:20px">This is the real clean-up, frame by frame.
-        Pull the handle and run it yourself.</p>
-      <p class="stepname" id="stepName">Foam</p>
-      <p class="stepsub" id="stepSub">An even coat over the dirty areas.</p>
-      <div class="rail" id="rail" role="slider" tabindex="0"
-           aria-label="Clean-up progress" aria-valuemin="0" aria-valuemax="100"
-           aria-valuenow="0" aria-valuetext="Foam">
-        <div class="bar"><b id="fill"></b><span class="grip" id="grip"></span></div>
-        <ul class="stops" id="stops">
-          <li>FOAM</li><li>BRUSH</li><li>WIPE</li><li>CLEAN</li>
-        </ul>
+    <div class="cleanside">
+      <div class="cleanintro">
+        <p class="eyebrow">Proof, not promises</p>
+        <h2 class="h-sec">Drag to clean</h2>
+        <p class="lede" style="margin-top:20px">This is the real clean-up, frame by frame.
+          Pull the handle and run it yourself.</p>
+      </div>
+      <div class="cleanctrl">
+        <p class="stepname" id="stepName">Foam</p>
+        <p class="stepsub" id="stepSub">An even coat over the dirty areas.</p>
+        <div class="rail" id="rail" role="slider" tabindex="0"
+             aria-label="Clean-up progress" aria-valuemin="0" aria-valuemax="100"
+             aria-valuenow="0" aria-valuetext="Foam">
+          <div class="bar"><b id="fill"></b><span class="grip" id="grip"></span></div>
+          <ul class="stops" id="stops">
+            <li>FOAM</li><li>BRUSH</li><li>WIPE</li><li>CLEAN</li>
+          </ul>
+        </div>
       </div>
     </div>
     <div class="shot" id="shot">
@@ -568,20 +595,42 @@ function apply(v){
   rail.setAttribute('aria-valuenow', Math.round(p*100));
   rail.setAttribute('aria-valuetext', STEPS[idx].name);
 }
-function grab(el, mapX){
-  var active = false;
+/* On a touch screen a vertical swipe must always scroll the page; only a
+   clearly horizontal drag takes over and scrubs. Mouse/pen grab instantly. */
+function grab(el, mapX, instant){
+  var active = false, armed = false, sx = 0, sy = 0, pid = null;
+  function stop(){
+    active = false; armed = false; pid = null;
+    el.classList.remove('scrubbing');
+  }
   el.addEventListener('pointerdown', function(e){
-    active = true; touched = true; el.setPointerCapture(e.pointerId);
+    pid = e.pointerId; sx = e.clientX; sy = e.clientY;
+    if (e.pointerType === 'touch' && !instant) { armed = true; return; }
+    active = true; touched = true;
+    try { el.setPointerCapture(pid); } catch(err){}
     apply(mapX(e)); e.preventDefault();
   });
-  el.addEventListener('pointermove', function(e){ if (active) apply(mapX(e)); });
-  el.addEventListener('pointerup',   function(){ active = false; });
-  el.addEventListener('pointercancel',function(){ active = false; });
+  el.addEventListener('pointermove', function(e){
+    if (armed && !active){
+      var dx = Math.abs(e.clientX - sx), dy = Math.abs(e.clientY - sy);
+      if (dy > 9 && dy >= dx) { armed = false; return; }   /* let the page scroll */
+      if (dx < 9 || dx <= dy) return;                      /* not decided yet */
+      active = true; armed = false; touched = true;
+      el.classList.add('scrubbing');
+      try { el.setPointerCapture(pid); } catch(err){}
+    }
+    if (!active) return;
+    apply(mapX(e));
+    if (e.cancelable) e.preventDefault();
+  });
+  el.addEventListener('pointerup', stop);
+  el.addEventListener('pointercancel', stop);
+  el.addEventListener('lostpointercapture', stop);
 }
 grab(rail, function(e){ var r = rail.querySelector('.bar').getBoundingClientRect();
-                        return (e.clientX - r.left) / r.width; });
+                        return (e.clientX - r.left) / r.width; }, true);
 grab(shot, function(e){ var r = shot.getBoundingClientRect();
-                        return (e.clientX - r.left) / r.width; });
+                        return (e.clientX - r.left) / r.width; }, false);
 rail.addEventListener('keydown', function(e){
   var d = 0;
   if (e.key === 'ArrowRight' || e.key === 'ArrowUp') d = .05;
