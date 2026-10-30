@@ -1,0 +1,814 @@
+<meta name="claude:viewport-fit-sides" content="cover">
+<title>Spazzu Foam</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Hanken+Grotesk:wght@400;500;700&family=Michroma&display=swap">
+
+<style>
+/* Layout: one dark lab. A real 3D can floats on a fixed canvas and docks into the
+   slots the content leaves for it, fading out between them. Every band is a
+   full-bleed colour field whose inner wrapper owns the gutter. */
+:root{
+  --void:#0A0704;      /* ground */
+  --soot:#15100A;      /* raised panel */
+  --ink:#231810;       /* hairline fills */
+  --gold:#E0A020;      /* brand gold, from the can */
+  --flash:#F7D21E;     /* the can's acid yellow, the one loud colour */
+  --foam:#F7F3EA;      /* foam white, body text */
+  --mud:#9D8E79;       /* muted text */
+  --line:rgba(247,243,234,.13);
+  --display:'Archivo Black','Arial Black',system-ui,sans-serif;
+  --body:'Hanken Grotesk',system-ui,-apple-system,sans-serif;
+  --tech:'Michroma','Courier New',monospace;
+  --pad:clamp(76px,9vw,148px);
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--void);color:var(--foam);
+  font-family:var(--body);font-size:17px;line-height:1.6;
+  -webkit-font-smoothing:antialiased;overflow-x:hidden}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);
+  z-index:60;background:rgba(10,7,4,.92);backdrop-filter:blur(10px)}
+img,video{max-width:100%;display:block}
+a{color:inherit}
+:focus-visible{outline:2px solid var(--flash);outline-offset:3px;border-radius:6px}
+h1,h2,h3{margin:0;font-family:var(--display);font-weight:400;line-height:.94;
+  letter-spacing:-.022em;text-transform:uppercase;text-wrap:balance}
+p{margin:0}
+
+.wrap{width:100%;max-width:1280px;margin-inline:auto;
+  padding-left:max(16px,env(safe-area-inset-left,0px));
+  padding-right:max(16px,env(safe-area-inset-right,0px))}
+.band{position:relative}
+.band>.wrap{padding-block:var(--pad)}
+.eyebrow{font-family:var(--tech);font-size:clamp(10px,1.05vw,12px);letter-spacing:.26em;
+  color:var(--gold);text-transform:uppercase;margin:0 0 20px}
+.lede{color:var(--mud);font-size:clamp(16px,1.35vw,19px);max-width:46ch}
+.h-sec{font-size:clamp(34px,4.6vw,60px)}
+
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:10px;
+  min-height:56px;padding:0 30px;border:0;cursor:pointer;border-radius:999px;
+  font-family:var(--body);font-weight:700;font-size:16px;text-decoration:none;
+  white-space:nowrap;
+  transition:transform .25s cubic-bezier(.2,.8,.2,1),box-shadow .3s,background .2s}
+.btn-gold{background:linear-gradient(170deg,var(--flash),var(--gold));color:#1A1203;
+  box-shadow:0 14px 34px -14px rgba(224,160,32,.85)}
+.btn-gold:hover{transform:translateY(-2px);box-shadow:0 20px 44px -14px rgba(224,160,32,.95)}
+.btn-ghost{background:transparent;color:var(--foam);border:1.5px solid var(--line)}
+.btn-ghost:hover{background:rgba(247,243,234,.06);transform:translateY(-2px)}
+
+#stage{position:fixed;inset:0;width:100%;height:100%;z-index:0;pointer-events:none}
+#fallback{position:fixed;left:50%;top:46%;width:min(38vw,230px);
+  transform:translate(-50%,-50%);z-index:0;opacity:0;transition:opacity .5s}
+.nogl #fallback{opacity:1}
+.shell{position:relative;z-index:2}
+
+nav{position:sticky;top:env(safe-area-inset-top,0px);z-index:50;
+  background:rgba(10,7,4,.72);backdrop-filter:blur(14px);
+  border-bottom:1px solid transparent;transition:border-color .3s,background .3s}
+nav.stuck{border-bottom-color:var(--line);background:rgba(10,7,4,.92)}
+nav .wrap{display:flex;align-items:center;justify-content:space-between;gap:20px;
+  padding-block:16px}
+.mark{font-family:var(--tech);font-size:19px;letter-spacing:.16em;text-decoration:none;
+  display:flex;align-items:baseline;gap:9px}
+.mark i{font-style:normal;font-family:var(--body);font-size:10px;letter-spacing:.2em;
+  color:var(--mud)}
+nav ul{display:flex;gap:30px;list-style:none;margin:0;padding:0}
+nav ul a{font-size:15px;color:var(--mud);text-decoration:none;transition:color .2s}
+nav ul a:hover{color:var(--foam)}
+nav .btn{min-height:44px;padding:0 20px;font-size:14px}
+
+/* hero */
+.hero .wrap{display:grid;grid-template-columns:minmax(0,1.04fr) minmax(0,.96fr);
+  gap:clamp(24px,4vw,64px);align-items:center;padding-block:clamp(40px,6vw,84px) var(--pad)}
+.hero h1{font-size:clamp(44px,6.6vw,96px)}
+.hero h1 em{font-style:normal;display:block;color:var(--flash)}
+.hero .lede{margin:26px 0 34px}
+.cta-row{display:flex;flex-wrap:wrap;gap:14px}
+.trust{display:flex;flex-wrap:wrap;gap:10px 26px;list-style:none;margin:40px 0 0;padding:0;
+  font-size:14.5px;color:var(--mud)}
+.trust li{display:flex;align-items:center;gap:9px}
+.trust li::before{content:"";width:7px;height:7px;border-radius:50%;background:var(--gold);flex:none}
+.slot{aspect-ratio:453/1516;height:clamp(300px,58vh,540px);width:auto;
+  margin-inline:auto;position:relative}
+.spec .slot{height:clamp(270px,48vh,450px)}
+.slot[data-hint]::after{content:attr(data-hint);position:absolute;left:50%;bottom:-32px;
+  transform:translateX(-50%);font-family:var(--tech);font-size:9.5px;letter-spacing:.24em;
+  color:var(--mud);white-space:nowrap}
+
+/* marquee */
+.marq{overflow:hidden;border-block:1px solid var(--line);background:var(--soot);
+  padding-block:20px}
+.marq-row{display:flex;gap:42px;width:max-content;animation:slide 38s linear infinite}
+.marq-row span{font-family:var(--display);font-size:clamp(15px,1.7vw,21px);
+  color:#6E5F49;white-space:nowrap;text-transform:uppercase}
+.marq-row span:nth-child(4n+3){color:var(--gold)}
+.marq-row i{width:7px;height:7px;background:var(--gold);transform:rotate(45deg);
+  align-self:center;flex:none;opacity:.7}
+@keyframes slide{to{transform:translateX(-50%)}}
+
+/* ---------- drag to clean ---------- */
+.clean{background:linear-gradient(180deg,var(--void),var(--soot) 50%,var(--void))}
+.clean .wrap{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,420px);
+  gap:clamp(30px,5vw,76px);align-items:center}
+.stepname{font-family:var(--display);font-size:clamp(42px,6vw,84px);line-height:.9;
+  color:var(--flash);margin:26px 0 4px;text-transform:uppercase}
+.stepsub{color:var(--mud);font-size:15px;min-height:22px}
+.rail{margin-top:34px;touch-action:none;cursor:grab;padding:18px 0 4px;user-select:none}
+.rail:active{cursor:grabbing}
+.rail .bar{position:relative;height:10px;border-radius:99px;
+  background:rgba(247,243,234,.1);box-shadow:inset 0 0 0 1px var(--line)}
+.rail .bar>b{position:absolute;inset:0 auto 0 0;width:0%;border-radius:99px;
+  background:linear-gradient(90deg,var(--gold),var(--flash))}
+.grip{position:absolute;top:50%;left:0;width:46px;height:46px;border-radius:50%;
+  transform:translate(-50%,-50%);background:var(--foam);
+  box-shadow:0 8px 24px rgba(0,0,0,.65),0 0 0 6px rgba(247,210,30,.14);
+  display:grid;place-items:center}
+.grip::before,.grip::after{content:"";width:0;height:0;
+  border-top:5px solid transparent;border-bottom:5px solid transparent;position:absolute}
+.grip::before{border-right:7px solid #1A1203;left:11px}
+.grip::after{border-left:7px solid #1A1203;right:11px}
+.stops{display:flex;justify-content:space-between;margin-top:16px;list-style:none;padding:0}
+.stops li{font-family:var(--tech);font-size:9.5px;letter-spacing:.2em;color:#5F5340;
+  transition:color .25s}
+.stops li.on{color:var(--flash)}
+.shot{position:relative;border-radius:22px;overflow:hidden;background:#0E0A06;
+  box-shadow:0 40px 90px -50px #000,inset 0 0 0 1px var(--line);
+  touch-action:none;cursor:grab;user-select:none}
+.shot:active{cursor:grabbing}
+.shot video,.shot img{width:100%;height:auto;display:block}
+.shot .edge{position:absolute;top:14px;font-family:var(--tech);font-size:9.5px;
+  letter-spacing:.2em;background:rgba(10,7,4,.7);backdrop-filter:blur(6px);
+  padding:7px 12px;border-radius:999px;border:1px solid var(--line)}
+.shot .edge.l{left:14px}
+.shot .edge.r{right:14px;color:var(--flash)}
+.shot.loading::after{content:'LOADING CLIP';position:absolute;left:50%;bottom:16px;
+  transform:translateX(-50%);font-family:var(--tech);font-size:9.5px;letter-spacing:.2em;
+  background:rgba(10,7,4,.75);padding:8px 14px;border-radius:999px;
+  border:1px solid var(--line);color:var(--mud)}
+
+/* method */
+.steps{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:clamp(16px,2vw,28px);
+  margin-top:clamp(36px,5vw,62px)}
+.step{background:var(--soot);border:1px solid var(--line);border-radius:20px;overflow:hidden;
+  display:flex;flex-direction:column}
+.step figure{margin:0;aspect-ratio:4/3;overflow:hidden;background:var(--ink)}
+.step figure img{width:100%;height:100%;object-fit:cover}
+.step .txt{padding:26px 24px 30px;display:flex;flex-direction:column;gap:9px;flex:1}
+.step b{font-family:var(--tech);font-size:10px;letter-spacing:.24em;color:var(--gold)}
+.step h3{font-size:clamp(23px,2.3vw,30px)}
+.step p{color:var(--mud);font-size:15.5px}
+
+/* spec */
+.spec .wrap{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);
+  gap:clamp(28px,5vw,80px);align-items:center}
+.spec dl{margin:30px 0 0}
+.spec .row{display:grid;grid-template-columns:minmax(96px,30%) 1fr;gap:18px;
+  padding:17px 0;border-top:1px solid var(--line)}
+.spec .row:last-child{border-bottom:1px solid var(--line)}
+.spec dt{font-family:var(--tech);font-size:10px;letter-spacing:.2em;color:var(--mud);
+  padding-top:4px}
+.spec dd{margin:0;font-size:17px;font-weight:500}
+.mats{display:flex;flex-wrap:wrap;gap:9px;margin-top:26px;list-style:none;padding:0}
+.mats li{font-family:var(--tech);font-size:9.5px;letter-spacing:.18em;color:var(--mud);
+  border:1px solid var(--line);border-radius:999px;padding:9px 15px}
+
+/* story */
+.story{background:var(--soot);border-block:1px solid var(--line)}
+.story .wrap{display:grid;grid-template-columns:minmax(0,440px) minmax(0,1fr);
+  gap:clamp(28px,5vw,74px);align-items:center}
+.story figure{margin:0;border-radius:22px;overflow:hidden;border:1px solid var(--line)}
+.story figure img{width:100%;height:auto}
+.story .big{font-family:var(--display);font-size:clamp(46px,6vw,88px);color:var(--flash);
+  line-height:.9;margin-bottom:6px}
+
+/* gallery */
+.gal{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px;
+  margin-top:clamp(32px,4vw,54px)}
+.gal figure{margin:0;border-radius:18px;overflow:hidden;background:var(--ink);
+  border:1px solid var(--line)}
+.gal img{width:100%;height:100%;object-fit:cover;aspect-ratio:1}
+.gal figure:first-child{grid-column:span 2;grid-row:span 2}
+
+/* faq */
+.faq-grid{display:grid;grid-template-columns:minmax(0,.7fr) minmax(0,1.3fr);
+  gap:clamp(24px,4vw,70px);align-items:start}
+details{border-top:1px solid var(--line)}
+details:last-of-type{border-bottom:1px solid var(--line)}
+summary{list-style:none;cursor:pointer;padding:22px 44px 22px 0;position:relative;
+  font-size:18px;font-weight:700}
+summary::-webkit-details-marker{display:none}
+summary::after{content:"";position:absolute;right:8px;top:50%;width:11px;height:11px;
+  border-right:2px solid var(--gold);border-bottom:2px solid var(--gold);
+  transform:translateY(-70%) rotate(45deg);transition:transform .3s}
+details[open] summary::after{transform:translateY(-30%) rotate(225deg)}
+details p{padding:0 0 22px;color:var(--mud);max-width:60ch}
+
+/* notify */
+.notify{background:linear-gradient(175deg,var(--soot),var(--void) 70%);
+  border-top:1px solid var(--line)}
+.notify .wrap{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,.85fr);
+  gap:clamp(28px,5vw,70px);align-items:center}
+.notify h2{font-size:clamp(36px,5.2vw,68px)}
+form{display:flex;flex-wrap:wrap;gap:12px;margin-top:30px;max-width:520px}
+input[type=tel]{flex:1 1 220px;min-width:0;min-height:56px;padding:0 20px;border-radius:14px;
+  border:1.5px solid var(--line);background:rgba(10,7,4,.7);color:var(--foam);
+  font-family:var(--body);font-size:16px}
+input[type=tel]::placeholder{color:#6E5F49}
+.note{font-size:14px;color:var(--mud);margin-top:14px;min-height:21px}
+.note a{color:var(--flash)}
+.qr-card{display:flex;align-items:center;gap:22px;padding:24px;border-radius:20px;
+  background:rgba(247,243,234,.045);border:1px solid var(--line)}
+.qr-card img{width:124px;height:124px;border-radius:12px;background:#fff;padding:9px;flex:none}
+.qr-card .d{font-family:var(--tech);font-size:19px}
+.qr-card .s{font-size:14px;color:var(--mud);margin-top:7px}
+.copybtn{margin-top:12px;min-height:40px;padding:0 16px;border-radius:999px;
+  border:1px solid var(--line);background:transparent;color:var(--foam);
+  font-family:var(--body);font-size:13.5px;cursor:pointer}
+
+footer{border-top:1px solid var(--line);background:var(--void)}
+footer .wrap{padding-block:46px 64px;display:flex;flex-wrap:wrap;gap:22px 40px;
+  justify-content:space-between;align-items:flex-end;font-size:14px;color:var(--mud)}
+footer b{display:block;font-family:var(--tech);font-size:15px;letter-spacing:.14em;
+  color:var(--foam);margin-bottom:10px}
+
+/* sticky mobile buy bar */
+.mbar{display:none;position:fixed;left:0;right:0;bottom:0;z-index:45;
+  align-items:center;gap:14px;
+  background:rgba(13,9,5,.93);backdrop-filter:blur(14px);border-top:1px solid var(--line);
+  padding:12px max(16px,env(safe-area-inset-left,0px))
+          calc(12px + env(safe-area-inset-bottom,0px)) max(16px,env(safe-area-inset-right,0px));
+  transform:translateY(130%);transition:transform .35s cubic-bezier(.2,.8,.2,1)}
+.mbar.show{transform:none}
+.mbar div{flex:1;min-width:0;line-height:1.25}
+.mbar b{display:block;font-size:14px}
+.mbar span{font-size:12.5px;color:var(--mud)}
+.mbar .btn{min-height:46px;padding:0 20px;font-size:14px}
+
+@media (max-width:980px){
+  nav ul{display:none}
+  nav .btn{padding:0 15px;font-size:13px}
+  .hero .wrap{grid-template-columns:1fr;padding-block:20px 70px}
+  .hero .copy{order:2}
+  .slot,.spec .slot{height:clamp(240px,40vh,360px);margin-bottom:44px}
+  .clean .wrap,.spec .wrap,.story .wrap,.notify .wrap,.faq-grid{grid-template-columns:1fr}
+  .story figure{order:2}
+  .steps{grid-template-columns:1fr}
+  .gal{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .gal figure:first-child{grid-column:span 2;grid-row:auto}
+  .mbar{display:flex}
+  body{padding-bottom:0}
+}
+@media (max-width:520px){
+  .gal{grid-template-columns:1fr}
+  .gal figure:first-child{grid-column:auto}
+  .qr-card{flex-direction:column;align-items:flex-start}
+}
+@media (prefers-reduced-motion:reduce){
+  *{animation-duration:.001ms!important;animation-iteration-count:1!important;
+    transition-duration:.001ms!important}
+}
+</style>
+
+<canvas id="stage" aria-hidden="true"></canvas>
+<img id="fallback" src="./can.webp" width="230" height="700"
+     alt="Spazzu Instant Shoe Cleaning Foam, 400 ml can">
+
+<div class="shell">
+<nav id="nav">
+  <div class="wrap">
+    <a class="mark" href="#top">SPAZZU<i>BY KAYROA</i></a>
+    <ul>
+      <li><a href="#clean">Watch it</a></li>
+      <li><a href="#method">Method</a></li>
+      <li><a href="#spec">Spec</a></li>
+      <li><a href="#faq">FAQ</a></li>
+    </ul>
+    <a class="btn btn-gold" href="#notify">Get launch alert</a>
+  </div>
+</nav>
+
+<main id="top">
+<section class="hero band">
+  <div class="wrap">
+    <div class="copy">
+      <p class="eyebrow">400 ml / Instant shoe cleaning foam</p>
+      <h1>Keep them<em>box fresh</em></h1>
+      <p class="lede">Spray it on, work it in, wipe it off. Spazzu lifts dirt out of
+        sneakers without a bucket, a soak or a washing machine.</p>
+      <div class="cta-row">
+        <a class="btn btn-gold" href="#notify">Get launch alert</a>
+        <a class="btn btn-ghost" href="#clean">See it clean a shoe</a>
+      </div>
+      <ul class="trust">
+        <li>Tough on dirt, safe on shoes</li>
+        <li>All sneaker materials</li>
+        <li>400 ml aerosol</li>
+      </ul>
+    </div>
+    <div class="slot" data-slot data-hint="DRAG TO SPIN"></div>
+  </div>
+</section>
+
+<div class="marq" aria-hidden="true"><div class="marq-row" id="marq"></div></div>
+
+<section class="clean band" id="clean">
+  <div class="wrap">
+    <div>
+      <p class="eyebrow">Proof, not promises</p>
+      <h2 class="h-sec">Drag to clean</h2>
+      <p class="lede" style="margin-top:20px">This is the real clean-up, frame by frame.
+        Pull the handle and run it yourself.</p>
+      <p class="stepname" id="stepName">Foam</p>
+      <p class="stepsub" id="stepSub">An even coat over the dirty areas.</p>
+      <div class="rail" id="rail" role="slider" tabindex="0"
+           aria-label="Clean-up progress" aria-valuemin="0" aria-valuemax="100"
+           aria-valuenow="0" aria-valuetext="Foam">
+        <div class="bar"><b id="fill"></b><span class="grip" id="grip"></span></div>
+        <ul class="stops" id="stops">
+          <li>FOAM</li><li>BRUSH</li><li>WIPE</li><li>CLEAN</li>
+        </ul>
+      </div>
+    </div>
+    <div class="shot" id="shot">
+      <span class="edge l">DIRTY</span><span class="edge r">CLEAN</span>
+      <video id="scrubVid" muted playsinline preload="none" width="540" height="960"
+             poster="./scrub-start.jpg" aria-label="Spazzu cleaning a sneaker"></video>
+    </div>
+  </div>
+</section>
+
+<section class="band" id="method">
+  <div class="wrap">
+    <p class="eyebrow">The method</p>
+    <h2 class="h-sec" style="max-width:14ch">Three moves, one can</h2>
+    <div class="steps">
+      <article class="step">
+        <figure><img src="./workshop.jpg" width="960" height="960" decoding="async" loading="lazy"
+          alt="A dirty white sneaker beside the Spazzu can and a brush"></figure>
+        <div class="txt"><b>Step 01 / Spray</b><h3>Lay the foam on</h3>
+          <p>Shake the can, then cover the dirty areas in an even layer of foam.</p></div>
+      </article>
+      <article class="step">
+        <figure><img src="./demo.jpg" width="960" height="720" decoding="async" loading="lazy"
+          alt="A hand brushing Spazzu foam into a white sneaker"></figure>
+        <div class="txt"><b>Step 02 / Brush</b><h3>Work it in</h3>
+          <p>Use a soft brush in small circles. The foam lifts dirt up out of the material.</p></div>
+      </article>
+      <article class="step">
+        <figure><img src="./podium.jpg" width="960" height="960" decoding="async" loading="lazy"
+          alt="A clean white sneaker beside the Spazzu can"></figure>
+        <div class="txt"><b>Step 03 / Wipe</b><h3>Take it off</h3>
+          <p>Lift the foam away with a dry microfibre cloth, then let them air dry.</p></div>
+      </article>
+    </div>
+  </div>
+</section>
+
+<section class="spec band" id="spec">
+  <div class="wrap">
+    <div class="slot" data-slot></div>
+    <div>
+      <p class="eyebrow">On the can</p>
+      <h2 class="h-sec">Everything it says</h2>
+      <p class="lede" style="margin-top:20px">No invented numbers. This is what is printed
+        on the pack, and nothing beyond it.</p>
+      <dl>
+        <div class="row"><dt>Volume</dt><dd>400 ml</dd></div>
+        <div class="row"><dt>Format</dt><dd>Aerosol cleaning foam</dd></div>
+        <div class="row"><dt>Materials</dt><dd>Safe for all sneaker materials</dd></div>
+        <div class="row"><dt>Promise</dt><dd>Tough on dirt, safe on shoes</dd></div>
+        <div class="row"><dt>Brand</dt><dd>Spazzu, by KAYROA</dd></div>
+      </dl>
+      <ul class="mats">
+        <li>LEATHER</li><li>CANVAS</li><li>MESH</li><li>KNIT</li><li>SYNTHETIC</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<section class="story band">
+  <div class="wrap">
+    <figure><img src="./lifestyle.jpg" width="960" height="1202" decoding="async" loading="lazy"
+      alt="A man on sunlit steps lacing a clean white sneaker with the Spazzu can beside him"></figure>
+    <div>
+      <p class="eyebrow">Who makes it</p>
+      <p class="big">Since 1985</p>
+      <h2 class="h-sec" style="max-width:15ch">Built by people who fix shoes for a living</h2>
+      <p class="lede" style="margin-top:22px">Spazzu comes from KAYROA, the company behind
+        Markk Shoe Laundry in Pune. Four decades of cleaning, restoring and repairing other
+        people's shoes went into working out what a can like this has to do.</p>
+      <a class="btn btn-ghost" style="margin-top:28px" href="#notify">Tell me when it drops</a>
+    </div>
+  </div>
+</section>
+
+<section class="band">
+  <div class="wrap">
+    <p class="eyebrow">In the wild</p>
+    <h2 class="h-sec">Shot on the step, not in a lightbox</h2>
+    <div class="gal">
+      <figure><img src="./studio.jpg" width="960" height="540" decoding="async" loading="lazy"
+        alt="A white sneaker and the Spazzu can on travertine"></figure>
+      <figure><img src="./demo.jpg" width="960" height="720" decoding="async" loading="lazy"
+        alt="Foam being brushed into a sneaker"></figure>
+      <figure><img src="./podium.jpg" width="960" height="960" decoding="async" loading="lazy"
+        alt="The Spazzu can lit on a dark podium"></figure>
+      <figure><img src="./workshop.jpg" width="960" height="960" decoding="async" loading="lazy"
+        alt="The can beside a dirty sneaker and a brush"></figure>
+      <figure><img src="./lifestyle.jpg" width="960" height="1202" decoding="async" loading="lazy"
+        alt="Lacing a clean sneaker on a sunlit step"></figure>
+    </div>
+  </div>
+</section>
+
+<section class="band" id="faq">
+  <div class="wrap faq-grid">
+    <div>
+      <p class="eyebrow">Questions</p>
+      <h2 class="h-sec" style="font-size:clamp(30px,3.8vw,48px)">Before you ask</h2>
+    </div>
+    <div>
+      <details open><summary>How do I actually use it?</summary>
+        <p>Shake the can. Spray an even layer of foam over the dirty areas. Work it in with a
+          soft brush, then wipe the foam off with a dry microfibre cloth and let the shoes
+          air dry.</p></details>
+      <details><summary>What can I use it on?</summary>
+        <p>The pack says it is safe for all sneaker materials. As with any cleaner, try a
+          small hidden patch first on anything delicate.</p></details>
+      <details><summary>Why not just put them in the washing machine?</summary>
+        <p>A machine soaks the whole shoe, which is hard on glue and on the shape, and then
+          you lose a day to drying. A foam stays on the surface you are cleaning, so you wipe
+          it off and wear them.</p></details>
+      <details><summary>Do I need water?</summary>
+        <p>No bucket and no soaking. Spray, brush, then wipe off with a dry cloth.</p></details>
+      <details><summary>How big is the can?</summary>
+        <p>400 ml.</p></details>
+      <details><summary>Where can I buy it?</summary>
+        <p>Not yet on sale. Leave your WhatsApp number below and you will hear the day it
+          goes live.</p></details>
+    </div>
+  </div>
+</section>
+
+<section class="notify band" id="notify">
+  <div class="wrap">
+    <div>
+      <p class="eyebrow">Launching soon</p>
+      <h2>Be first in<br>the queue</h2>
+      <p class="lede" style="margin-top:22px">Drop your WhatsApp number. We will message you
+        once, on the day Spazzu goes on sale.</p>
+      <form id="notifyForm" novalidate>
+        <input type="tel" id="phone" name="phone" inputmode="tel" autocomplete="tel"
+               placeholder="WhatsApp number" aria-label="Your WhatsApp number">
+        <button class="btn btn-gold" type="submit">Notify me</button>
+      </form>
+      <p class="note" id="note"></p>
+    </div>
+    <div class="qr-card">
+      <img src="./qr.png" width="340" height="340" loading="lazy"
+           alt="QR code linking to spazzu.com">
+      <div>
+        <div class="d">spazzu.com</div>
+        <div class="s">Scan to open on your phone</div>
+        <button class="copybtn" id="copyBtn" type="button">Copy address</button>
+      </div>
+    </div>
+  </div>
+</section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <div><b>SPAZZU</b>Instant shoe cleaning foam, 400 ml<br>A KAYROA brand</div>
+    <div><b>KAYROA</b>Markk Shoe Laundry, Vishrantwadi<br>Pune, Maharashtra 411015</div>
+    <div><b>CONTACT</b>spazzu.com<br>Site by ManpaTech</div>
+  </div>
+</footer>
+</div>
+
+<div class="mbar" id="mbar">
+  <div><b>Spazzu Foam, 400 ml</b><span>Launching soon</span></div>
+  <a class="btn btn-gold" href="#notify">Get alert</a>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script>
+(function(){
+"use strict";
+var reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+/* ---------------- marquee ---------------- */
+var WORDS = ['Tough on dirt','Safe on shoes','All sneaker materials','400 ml',
+             'No bucket','No soaking','Spray. Brush. Wipe.','By KAYROA'];
+document.getElementById('marq').innerHTML =
+  WORDS.concat(WORDS).map(function(w){ return '<span>'+w+'</span><i></i>'; }).join('');
+
+/* ---------------- nav + sticky bar ---------------- */
+var nav = document.getElementById('nav'), mbar = document.getElementById('mbar'),
+    notifySec = document.getElementById('notify');
+addEventListener('scroll', function(){
+  nav.classList.toggle('stuck', scrollY > 20);
+  var r = notifySec.getBoundingClientRect();
+  mbar.classList.toggle('show', scrollY > innerHeight * 0.85 && r.top > innerHeight * 0.5);
+}, {passive:true});
+
+/* ---------------- drag to clean ---------------- */
+var STEPS = [
+  {at:0.00, name:'Foam',  sub:'An even coat over the dirty areas.'},
+  {at:0.40, name:'Brush', sub:'Small circles. The foam lifts the dirt up.'},
+  {at:0.62, name:'Wipe',  sub:'Off with a dry microfibre cloth.'},
+  {at:0.84, name:'Clean', sub:'Back to white. No soaking, no drying day.'}
+];
+var rail = document.getElementById('rail'), shot = document.getElementById('shot'),
+    vid = document.getElementById('scrubVid'), fill = document.getElementById('fill'),
+    grip = document.getElementById('grip'), stops = document.getElementById('stops').children,
+    stepName = document.getElementById('stepName'), stepSub = document.getElementById('stepSub');
+var dur = 5.6, p = 0, touched = false, loaded = false;
+
+function nudge(){
+  if (reduce || touched) return;
+  var t0 = 0;
+  requestAnimationFrame(function step(now){
+    if (!t0) t0 = now;
+    if (touched) return;
+    var k = Math.min(1, (now - t0) / 1500);
+    apply((1 - Math.pow(1 - k, 3)) * 0.22);
+    if (k < 1) requestAnimationFrame(step);
+  });
+}
+vid.addEventListener('loadeddata', function(){
+  shot.classList.remove('loading');
+  if (vid.duration) dur = vid.duration;
+  apply(p);
+  nudge();
+});
+function loadClip(){
+  if (loaded) return; loaded = true;
+  shot.classList.add('loading');
+  var direct = function(){ vid.src = './scrub.mp4'; vid.load(); };
+  if (!window.fetch) { direct(); return; }
+  fetch('./scrub.mp4').then(function(r){ return r.blob(); })
+    .then(function(bl){ vid.src = URL.createObjectURL(bl); vid.load(); })
+    .catch(direct);
+}
+
+function apply(v){
+  p = Math.max(0, Math.min(1, v));
+  fill.style.width = (p*100)+'%';
+  grip.style.left = (p*100)+'%';
+  if (vid.readyState >= 1) { try { vid.currentTime = p * dur * 0.998; } catch(e){} }
+  var idx = 0;
+  for (var i = 0; i < STEPS.length; i++) if (p >= STEPS[i].at) idx = i;
+  for (var j = 0; j < stops.length; j++) stops[j].classList.toggle('on', j <= idx);
+  if (stepName.textContent !== STEPS[idx].name) {
+    stepName.textContent = STEPS[idx].name;
+    stepSub.textContent = STEPS[idx].sub;
+  }
+  rail.setAttribute('aria-valuenow', Math.round(p*100));
+  rail.setAttribute('aria-valuetext', STEPS[idx].name);
+}
+function grab(el, mapX){
+  var active = false;
+  el.addEventListener('pointerdown', function(e){
+    active = true; touched = true; el.setPointerCapture(e.pointerId);
+    apply(mapX(e)); e.preventDefault();
+  });
+  el.addEventListener('pointermove', function(e){ if (active) apply(mapX(e)); });
+  el.addEventListener('pointerup',   function(){ active = false; });
+  el.addEventListener('pointercancel',function(){ active = false; });
+}
+grab(rail, function(e){ var r = rail.querySelector('.bar').getBoundingClientRect();
+                        return (e.clientX - r.left) / r.width; });
+grab(shot, function(e){ var r = shot.getBoundingClientRect();
+                        return (e.clientX - r.left) / r.width; });
+rail.addEventListener('keydown', function(e){
+  var d = 0;
+  if (e.key === 'ArrowRight' || e.key === 'ArrowUp') d = .05;
+  if (e.key === 'ArrowLeft'  || e.key === 'ArrowDown') d = -.05;
+  if (e.key === 'Home') { touched = true; apply(0); e.preventDefault(); return; }
+  if (e.key === 'End')  { touched = true; apply(1); e.preventDefault(); return; }
+  if (d) { touched = true; apply(p + d); e.preventDefault(); }
+});
+apply(0);
+
+/* start fetching once the section is within a screen of the viewport */
+new IntersectionObserver(function(en, o){
+  if (!en[0].isIntersecting) return;
+  o.disconnect(); loadClip();
+}, {rootMargin:'600px 0px'}).observe(shot);
+
+/* ---------------- notify + copy ---------------- */
+var WA = '919970726888';
+document.getElementById('notifyForm').addEventListener('submit', function(e){
+  e.preventDefault();
+  var v = document.getElementById('phone').value.replace(/[^0-9+]/g, ''),
+      note = document.getElementById('note');
+  if (v.length < 10) { note.textContent = 'That number looks too short. Add all 10 digits.'; return; }
+  var msg = encodeURIComponent('Hi KAYROA! Tell me when Spazzu launches. My number: ' + v);
+  note.innerHTML = 'One step left: <a href="https://wa.me/' + WA + '?text=' + msg +
+    '" target="_blank" rel="noopener">open WhatsApp and press send</a>.';
+});
+document.getElementById('copyBtn').addEventListener('click', function(){
+  var b = this, done = function(ok){
+    b.textContent = ok ? 'Copied' : 'Select and copy';
+    setTimeout(function(){ b.textContent = 'Copy address'; }, 1800); };
+  if (navigator.clipboard && navigator.clipboard.writeText)
+    navigator.clipboard.writeText('https://spazzu.com').then(function(){done(true);},
+                                                             function(){done(false);});
+  else done(false);
+});
+
+/* ================= 3D can ================= */
+var canvas = document.getElementById('stage');
+if (!window.THREE) { document.body.classList.add('nogl'); return; }
+var renderer;
+try { renderer = new THREE.WebGLRenderer({canvas:canvas, antialias:true, alpha:true,
+                                          powerPreference:'high-performance'}); }
+catch (err) { document.body.classList.add('nogl'); return; }
+var mobile = innerWidth < 760;
+renderer.setPixelRatio(Math.min(devicePixelRatio, mobile ? 1.5 : 2));
+renderer.outputEncoding = THREE.sRGBEncoding;
+renderer.toneMapping = THREE.ACESFilmicToneMapping;
+renderer.toneMappingExposure = 1.06;
+
+var FOV = 30, CAMZ = 13;
+var scene = new THREE.Scene();
+var cam = new THREE.PerspectiveCamera(FOV, 1, 0.1, 100);
+cam.position.set(0, 0, CAMZ);
+
+function envCanvas(){
+  var c = document.createElement('canvas'); c.width = 1024; c.height = 512;
+  var x = c.getContext('2d');
+  var g = x.createLinearGradient(0, 0, 0, 512);
+  g.addColorStop(0, '#3a2c1c'); g.addColorStop(.44, '#0b0805'); g.addColorStop(1, '#1b140d');
+  x.fillStyle = g; x.fillRect(0, 0, 1024, 512);
+  function blob(cx, cy, w, h, col, a){
+    var r = x.createRadialGradient(cx, cy, 0, cx, cy, Math.max(w, h));
+    r.addColorStop(0, col); r.addColorStop(1, 'rgba(0,0,0,0)');
+    x.save(); x.globalAlpha = a; x.translate(cx, cy);
+    x.scale(w/Math.max(w,h), h/Math.max(w,h)); x.translate(-cx, -cy);
+    x.fillStyle = r; x.fillRect(0, 0, 1024, 512); x.restore();
+  }
+  blob(230, 140, 300, 120, '#fffaf0', 1.0);
+  blob(790, 180, 230, 100, '#ffd486', .9);
+  blob(520, 400, 380, 80, '#9a7836', .55);
+  return c;
+}
+var envTex = new THREE.CanvasTexture(envCanvas());
+envTex.mapping = THREE.EquirectangularReflectionMapping;
+var pmrem = new THREE.PMREMGenerator(renderer);
+scene.environment = pmrem.fromEquirectangular(envTex).texture;
+
+scene.add(new THREE.AmbientLight(0xffffff, 0.22));
+var key = new THREE.DirectionalLight(0xfff1d6, 2.5); key.position.set(3.4, 5.2, 4.6); scene.add(key);
+var rim = new THREE.DirectionalLight(0xffc14a, 1.9); rim.position.set(-4.4, 2.2, -3.2); scene.add(rim);
+var fil = new THREE.DirectionalLight(0x9fb8ff, 0.5); fil.position.set(-2.4, -1.6, 3.4); scene.add(fil);
+
+/* geometry: proportions measured from the real can photo */
+var CAN_H = 6.70, R = 1.0, capH = 1.99, bodyH = 4.30, baseH = 0.41;
+var yBot = -CAN_H / 2;
+var group = new THREE.Group(); scene.add(group);
+
+var labelTex = new THREE.TextureLoader().load('./label.jpg', function(t){
+  t.anisotropy = renderer.capabilities.getMaxAnisotropy();
+});
+labelTex.wrapS = THREE.RepeatWrapping;
+labelTex.encoding = THREE.sRGBEncoding;
+
+var body = new THREE.Mesh(
+  new THREE.CylinderGeometry(R, R, bodyH, mobile ? 72 : 128, 1, true),
+  new THREE.MeshStandardMaterial({map:labelTex, roughness:.44, metalness:.26,
+                                  envMapIntensity:.95}));
+body.position.y = yBot + baseH + bodyH / 2;
+group.add(body);
+
+var pts = [], rr = 0.995, bev = 0.26, topR = 0.60;
+pts.push(new THREE.Vector2(0.002, 0));
+pts.push(new THREE.Vector2(rr, 0));
+pts.push(new THREE.Vector2(rr, capH - bev));
+for (var i = 1; i <= 12; i++) {
+  var a = (i / 12) * Math.PI / 2;
+  pts.push(new THREE.Vector2(topR + (rr - topR) * Math.cos(a), (capH - bev) + bev * Math.sin(a)));
+}
+pts.push(new THREE.Vector2(0.002, capH));
+var cap = new THREE.Mesh(new THREE.LatheGeometry(pts, mobile ? 72 : 128),
+  new THREE.MeshStandardMaterial({color:0x14110E, roughness:.5, metalness:.52,
+                                  envMapIntensity:1.15}));
+cap.position.y = yBot + baseH + bodyH;
+group.add(cap);
+
+var base = new THREE.Mesh(new THREE.CylinderGeometry(R, R * .94, baseH, mobile ? 72 : 128),
+  new THREE.MeshStandardMaterial({color:0xB9BDC2, roughness:.26, metalness:.96,
+                                  envMapIntensity:1.35}));
+base.position.y = yBot + baseH / 2;
+group.add(base);
+
+var shadow = new THREE.Mesh(new THREE.PlaneGeometry(4.2, 4.2),
+  new THREE.MeshBasicMaterial({transparent:true, depthWrite:false, opacity:.5,
+    map:(function(){
+      var c = document.createElement('canvas'); c.width = c.height = 128;
+      var x = c.getContext('2d');
+      var g = x.createRadialGradient(64, 64, 0, 64, 64, 64);
+      g.addColorStop(0, 'rgba(0,0,0,.85)'); g.addColorStop(1, 'rgba(0,0,0,0)');
+      x.fillStyle = g; x.fillRect(0, 0, 128, 128); return new THREE.CanvasTexture(c);
+    })()}));
+shadow.rotation.x = -Math.PI / 2;
+shadow.position.y = yBot - 0.02;
+shadow.scale.set(1, .55, 1);
+group.add(shadow);
+
+var N = mobile ? 48 : 110;
+var pp = new Float32Array(N * 3), sd = new Float32Array(N);
+for (var k = 0; k < N; k++) {
+  pp[k*3] = (Math.random()-.5)*16; pp[k*3+1] = (Math.random()-.5)*14;
+  pp[k*3+2] = (Math.random()-.5)*7; sd[k] = Math.random();
+}
+var pg = new THREE.BufferGeometry();
+pg.setAttribute('position', new THREE.BufferAttribute(pp, 3));
+pg.setAttribute('aSeed', new THREE.BufferAttribute(sd, 1));
+var pmat = new THREE.ShaderMaterial({transparent:true, depthWrite:false,
+  uniforms:{uT:{value:0}, uPR:{value:renderer.getPixelRatio()}},
+  vertexShader:'attribute float aSeed;uniform float uT;uniform float uPR;varying float vA;'+
+    'void main(){vec3 p=position;p.y=mod(p.y+uT*(0.22+aSeed*0.5)+7.0,14.0)-7.0;'+
+    'p.x+=sin(uT*0.4+aSeed*22.0)*0.5;vec4 mv=modelViewMatrix*vec4(p,1.0);'+
+    'gl_PointSize=(1.4+aSeed*4.2)*uPR*(16.0/-mv.z);'+
+    'vA=0.16+0.5*aSeed;gl_Position=projectionMatrix*mv;}',
+  fragmentShader:'varying float vA;void main(){float d=length(gl_PointCoord-0.5);'+
+    'if(d>0.5)discard;float a=smoothstep(0.5,0.0,d);'+
+    'gl_FragColor=vec4(vec3(1.0,0.93,0.78),a*vA);}'});
+var motes = new THREE.Points(pg, pmat); scene.add(motes);
+
+/* dock into the nearest slot; fade out between slots so nothing streaks past */
+var slots = [].slice.call(document.querySelectorAll('[data-slot]'));
+var cur = {x:0, y:0, s:1, rot:0}, tgt = {x:0, y:0, s:1, rot:0};
+var vis = 0, tgtVis = 0, started = false;
+function measure(){
+  var vh = 2 * Math.tan(FOV / 2 * Math.PI / 180) * CAMZ, vw = vh * cam.aspect;
+  var best = null, bestD = 1e9;
+  for (var i = 0; i < slots.length; i++) {
+    var r = slots[i].getBoundingClientRect();
+    if (r.height < 10) continue;
+    var d = Math.abs(r.top + r.height / 2 - innerHeight / 2);
+    if (d < bestD) { bestD = d; best = r; }
+  }
+  if (!best) { tgtVis = 0; return; }
+  tgt.x = ((best.left + best.width / 2) / innerWidth - .5) * vw;
+  tgt.y = -((best.top + best.height / 2) / innerHeight - .5) * vh;
+  tgt.s = (best.height / innerHeight) * vh / CAN_H;
+  tgt.rot = ((best.top + best.height / 2) / innerHeight - .5) * 1.5;
+  var n = bestD / innerHeight;                       /* 0 centred, 1 a screen away */
+  tgtVis = n < .62 ? 1 : n > 1.0 ? 0 : 1 - (n - .62) / .38;
+  if (!started || vis < .04) {                       /* snap while invisible */
+    cur.x = tgt.x; cur.y = tgt.y; cur.s = tgt.s; cur.rot = tgt.rot; started = true;
+  }
+}
+function resize(){
+  renderer.setSize(innerWidth, innerHeight, false);
+  cam.aspect = innerWidth / innerHeight; cam.updateProjectionMatrix();
+  measure();
+}
+addEventListener('resize', resize);
+addEventListener('scroll', measure, {passive:true});
+
+var spin = 0, spinV = 0, tiltX = 0, tiltY = 0, down = false, lastX = 0;
+addEventListener('pointermove', function(e){
+  tiltX = (e.clientX / innerWidth - .5); tiltY = (e.clientY / innerHeight - .5);
+  if (down) { spinV += (e.clientX - lastX) * 0.00042; lastX = e.clientX; }
+}, {passive:true});
+addEventListener('pointerdown', function(e){
+  if (e.target.closest('a,button,input,details,summary,#shot,#rail,video')) return;
+  down = true; lastX = e.clientX;
+});
+addEventListener('pointerup', function(){ down = false; });
+
+var clock = new THREE.Clock();
+resize();
+function frame(){
+  requestAnimationFrame(frame);
+  if (document.hidden) return;
+  vis += (tgtVis - vis) * 0.10;
+  canvas.style.opacity = vis.toFixed(3);
+  if (vis < 0.012) return;                           /* nothing on screen: skip the draw */
+
+  var t = clock.getElapsedTime(), k = reduce ? 1 : 0.085;
+  cur.x += (tgt.x - cur.x) * k;
+  cur.y += (tgt.y - cur.y) * k;
+  cur.s += (tgt.s - cur.s) * k;
+  cur.rot += (tgt.rot - cur.rot) * k;
+  group.position.set(cur.x + (reduce ? 0 : tiltX * 0.30), cur.y, 0);
+  group.scale.setScalar(cur.s);
+
+  spinV *= 0.92;
+  spin += spinV + (reduce ? 0 : 0.0014);
+  group.rotation.y = Math.PI + spin + (reduce ? 0 : cur.rot);
+  group.rotation.z = reduce ? 0 : Math.sin(t * .5) * .012 + tiltX * .05;
+  group.rotation.x = reduce ? 0 : -tiltY * 0.07;
+
+  pmat.uniforms.uT.value = t;
+  motes.rotation.y = t * 0.012;
+  renderer.render(scene, cam);
+}
+requestAnimationFrame(frame);
+})();
+</script>
